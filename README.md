@@ -2,9 +2,9 @@
 
 ![Breathe's lavender pixel wave guiding a breathing cycle](assets/breathe-demo.gif)
 
-A lavender pixel wave follows inhale, hold and exhale while the agent works. Classic (4/7/8), Even (4/4/4) and Unwind (4/0/6) presets and custom durations are available. Inhale/exhale accept 1–30 whole seconds; hold accepts 0–30, with zero skipping hold. BB supports pointer and keyboard ripples. Light mode uses an amethyst crest; dark mode uses moonlit lavender.
+A lavender pixel wave follows inhale, hold and exhale while the agent works. Classic (4/7/8), Even (4/4/4) and Unwind (4/0/6) presets and custom durations are available. Inhale/exhale accept 1–30 whole seconds; hold accepts 0–30, with zero skipping hold. BB adds pointer and keyboard ripples, an amethyst crest in light mode and moonlit lavender in dark mode.
 
-A standalone plugin for **BB** and **Claude Code**. Its package, settings, styles and commands are independent of the other scene.
+A standalone plugin for **BB** and **Claude Code**, with separate settings for each host.
 
 Inspired by [Mindful Claude](https://github.com/halluton/Mindful-Claude) by [halluton](https://github.com/halluton), which turns the wait for Claude into a guided breathing exercise.
 
@@ -17,10 +17,10 @@ Slow, regular [breathing exercises](https://www.nhs.uk/mental-health/self-help/g
 Requires BB 0.46 or later with Plugin SDK 0.6.49 or later.
 
 ```sh
-bb plugin install git:https://github.com/Nikko-Foti/bb-plugin-breathe.git@main
+bb plugin install git:https://github.com/Nikko-Foti/bb-plugin-breathe.git@v0.1.0
 ```
 
-Open **Breathe settings** from the composer label, the **+** menu, or plugin settings. Preview, Replay, Undo and Apply are available. The scene appears during active work, pauses offscreen, respects system reduced motion, and hides while waiting for input. Hide dismisses the current turn. Enabling both standalone plugins displays both; each has its own switch.
+Open **Breathe settings** from the composer label, the **+** menu, or plugin settings. Preview, Replay, Undo and Apply are available. The scene appears during active work, pauses offscreen, respects system reduced motion, and hides while waiting for input. Hide dismisses the current turn. An on-demand Breathe skill helps agents explain or configure it.
 
 ## Claude Code
 
@@ -31,10 +31,6 @@ claude plugin install breathe --marketplace .
 ```
 
 Run **`/breathe`** for settings. Terminal draws colored half-block pixels; Desktop draws SVG. Still mode freezes motion. Preview edits before Apply; Close discards them. The package in `claude/` is self-contained and needs no npm dependencies at runtime.
-
-## Moving from While We Wait
-
-Install the standalone plugins, copy the breathing timing into Breathe, and turn on the scene(s) you want. Disable the combined While We Wait plugin to avoid duplicate scenes. Its existing settings can remain for rollback. BB and Claude settings are separate; the new plugins never read or overwrite another plugin's store.
 
 ## Development
 
