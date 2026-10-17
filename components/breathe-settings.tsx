@@ -1,8 +1,9 @@
-import { useEffect, useId, useRef, useState } from 'react';
-import { useRpc, useSettings } from '@get-bb/plugin-sdk/app';
+import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
+import { useRpc, useSettings, experimental_useCodeTheme } from '@get-bb/plugin-sdk/app';
 import type { rpcContract } from '../server';
 import { RHYTHMS, TIMING_FIELDS, readBreatheSettings, resolveDraft, type SettingsDraft, type BreatheSettings as Settings } from '../lib/settings';
 import type { Timing } from '../lib/breath';
+import { PALETTES, waveColors } from '../lib/palettes';
 import { SceneGlyph } from './scene-glyph';
 import { BreatheWave } from './breathe-wave';
 import { Button } from './ui/button';
@@ -10,11 +11,12 @@ import { Input } from './ui/input';
 import { Icon } from './ui/icon';
 
 function ScenePreview({ settings }: { settings: Settings }) {
-  return <div className="breathe-studio-stage"><BreatheWave timing={settings} /></div>;
+  return <div className="breathe-studio-stage"><BreatheWave timing={settings} palette={settings.palette} /></div>;
 }
 
 export function BreatheSettings({ onClose }: { onClose?: () => void }) {
   const { values, isLoading } = useSettings();
+  const { mode } = experimental_useCodeTheme();
   const rpc = useRpc<typeof rpcContract>();
   const remote = readBreatheSettings(values);
   const remoteKey = JSON.stringify(remote);
@@ -59,6 +61,7 @@ export function BreatheSettings({ onClose }: { onClose?: () => void }) {
     } finally { inFlight.current = false; setPending(false); }
   }
   return <section className="breathe-studio" aria-label="Breathe settings" aria-busy={locked}
+    style={{ '--breathe-accent': waveColors(next.palette, mode).text } as CSSProperties}
     // The popup is nested inside BB's composer. Keep its click-to-focus handlers
     // from dismissing us before a label can activate its radio or number input.
     onPointerDown={event => event.stopPropagation()} onMouseDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()}
@@ -85,6 +88,22 @@ export function BreatheSettings({ onClose }: { onClose?: () => void }) {
         </div>
         <ScenePreview key={replay} settings={next} />
       </div>
+      <fieldset className="breathe-colors" disabled={locked}>
+        <legend>Color</legend>
+        <div className="breathe-color-options">
+          {PALETTES.map(palette => <label className="breathe-color-option" key={palette.id}>
+            <input className="breathe-sr-only" type="radio" name={`${id}-palette`} value={palette.id}
+              checked={next.palette === palette.id} onChange={() => edit({ palette: palette.id })} />
+            <span className="breathe-color-tile">
+              <span className="breathe-color-swatch" aria-hidden="true">
+                {[0, 1, 3, 1, 0].map((band, i) => <i key={i} style={{ backgroundColor: palette[mode].bands[band] }} />)}
+              </span>
+              <span>{palette.name}</span>
+              <span className="breathe-color-check" aria-hidden="true">✓</span>
+            </span>
+          </label>)}
+        </div>
+      </fieldset>
       <div className="breathe-rhythm">
         <div className="breathe-section-heading"><h3>Timing</h3><span>{valid ? `${total}s per breath` : 'Custom timing'}</span></div>
         <div className="breathe-presets" role="group" aria-label="Breathing presets">

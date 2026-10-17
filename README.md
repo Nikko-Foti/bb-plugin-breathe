@@ -2,7 +2,7 @@
 
 ![Breathe's lavender pixel wave guiding a breathing cycle](assets/breathe-demo.gif)
 
-A lavender pixel wave follows inhale, hold and exhale while the agent works. Classic (4/7/8), Even (4/4/4) and Unwind (4/0/6) presets and custom durations are available. Inhale/exhale accept 1–30 whole seconds; hold accepts 0–30, with zero skipping hold. BB adds pointer and keyboard ripples, an amethyst crest in light mode and moonlit lavender in dark mode.
+A pixel wave in Lavender, Ocean, Sage, Rose, or Amber follows inhale, hold and exhale while the agent works. Classic (4/7/8), Even (4/4/4) and Unwind (4/0/6) presets and custom durations are available. Inhale/exhale accept 1–30 whole seconds; hold accepts 0–30, with zero skipping hold. BB adds pointer and keyboard ripples. Every color has its own light and dark appearance; Lavender is the default.
 
 A standalone plugin for **BB** and **Claude Code**, with separate settings for each host.
 
@@ -31,6 +31,12 @@ claude plugin install breathe --marketplace .
 ```
 
 Run **`/breathe`** for settings. Terminal draws colored half-block pixels; Desktop draws SVG. Still mode freezes motion. Preview edits before Apply; Close discards them. The package in `claude/` is self-contained and needs no npm dependencies at runtime.
+
+## Color choices
+
+Open **Breathe settings → Color** in BB or **`/breathe` → Color** in Claude Code. Selection previews immediately; Apply saves it. Color changes preserve your timing. The [color research](docs/color-research.md) explains the evidence, design choices, and complete wave ramps.
+
+The five-color feature is currently in the development checkout. The published `v0.1.0` package above contains the original Lavender wave. To use this checkout in BB, run `npm ci && npm run build && bb plugin install .` from the repository; Claude's local installation uses the `claude/` directory.
 
 ## Development
 

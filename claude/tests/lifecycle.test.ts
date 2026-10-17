@@ -2,7 +2,7 @@ import { expect, mock, test } from 'claude-code/testing';
 
 const BAND = { plugin: 'breathe', component: 'AbovePrompt', requestId: 'above-prompt', viewport: { columns: 100, rows: 32, isFullscreen: true }, props: { hasSurvey: false, isWorking: true, maxRows: 12, bodyColumns: 80, scroll: { offset: 0, bodyRows: 12 }, view: {} } } as const;
 const PANE = { plugin: 'breathe', component: 'Pane', requestId: 'breathe-settings', viewport: { columns: 100, rows: 40 }, props: { title: 'Breathe', isFocused: true, bodyColumns: 52, placement: 'inline', scroll: { offset: 0, bodyRows: 28 }, view: {} } } as const;
-const initial = { enabled: true, inhale: 6, hold: 7, exhale: 8, still: false };
+const initial = { palette: 'lavender', enabled: true, inhale: 6, hold: 7, exhale: 8, still: false };
 
 function setup(on, options = {}) {
   const calls = { ticks: 0 };
@@ -30,6 +30,37 @@ function setup(on, options = {}) {
   return { clock, saved, writes, closes, fail, calls };
 }
 async function start($) { await $.session.start({ surface: 'terminal', isInteractive: true, cwd: '/work' }); }
+
+test('five colors preview on both surfaces, Undo and Close discard, and Apply persists only the draft color', async ($, on) => {
+  const { saved, writes } = setup(on, { saved: { ...initial, still: true } });
+  await start($); await $.turn.start({ text: 'probe', turnId: 'main' });
+  const banner = await $.ui.mount({ ...BAND, surface: 'desktop' });
+  const liveBefore = (await banner.find({ type: 'Svg' }))?.props.source;
+  await $.command.run({ command: 'breathe', args: '' });
+  const desktop = await $.ui.mount({ ...PANE, surface: 'desktop' });
+  const terminal = await $.ui.mount({ ...PANE, surface: 'terminal' });
+  const images = new Set(), rasters = new Set();
+  for (const color of ['lavender', 'ocean', 'sage', 'rose', 'amber']) {
+    await desktop.press({ key: `palette-${color}` });
+    images.add((await desktop.find({ type: 'Svg' }))?.props.source);
+    rasters.add((await terminal.find({ type: 'Raster' }))?.props.cells);
+    expect((await terminal.find({ key: `palette-${color}` }))?.props.label).toMatch(/^✓ /);
+    expect((await banner.find({ type: 'Svg' }))?.props.source).toBe(liveBefore);
+  }
+  expect(images.size).toBe(5); expect(rasters.size).toBe(5); expect(writes).toHaveLength(0);
+  await terminal.press({ key: 'undo' });
+  expect((await desktop.find({ key: 'palette-lavender' }))?.props.label).toBe('✓ Lavender');
+  await desktop.press({ key: 'palette-rose' }); await desktop.press({ key: 'close' });
+  await $.command.run({ command: 'breathe', args: '' });
+  expect((await desktop.find({ key: 'palette-lavender' }))?.props.label).toBe('✓ Lavender');
+  saved.set('settings', { ...initial, still: true, inhale: 9 });
+  await terminal.press({ key: 'palette-ocean' }); await terminal.press({ key: 'apply' });
+  expect(saved.get('settings')).toEqual({ ...initial, still: true, inhale: 9, palette: 'ocean' });
+  expect((await banner.find({ type: 'Svg' }))?.props.source).not.toBe(liveBefore);
+  await $.command.run({ command: 'breathe', args: '' });
+  expect((await desktop.find({ key: 'palette-ocean' }))?.props.label).toBe('✓ Ocean');
+  await banner.unmount(); await desktop.unmount(); await terminal.unmount();
+});
 
 test('terminal and Desktop draw real changing scenes, preserve other mods, and stop on completion', async ($, on) => {
   const { clock } = setup(on);

@@ -5,8 +5,8 @@ import { loadPluginApp, renderSlot } from '@get-bb/plugin-sdk/testing/app';
 import { BreatheSettings } from './components/breathe-settings';
 
 // Rendering and timer lifecycles are covered by the real-canvas component suites.
-vi.mock('./components/breathe-wave', () => ({ BreatheWave: ({ timing }: { timing: { inhale: number; hold: number; exhale: number } }) => <div data-testid="wave-preview">{timing.inhale}/{timing.hold}/{timing.exhale}</div> }));
-const initial = { enabled: true, inhale: 4, hold: 7, exhale: 8 };
+vi.mock('./components/breathe-wave', () => ({ BreatheWave: ({ timing, palette }: { timing: { inhale: number; hold: number; exhale: number }; palette: string }) => <div data-testid="wave-preview" data-palette={palette}>{timing.inhale}/{timing.hold}/{timing.exhale}</div> }));
+const initial = { palette: 'lavender', enabled: true, inhale: 4, hold: 7, exhale: 8 };
 afterEach(cleanup);
 beforeEach(() => {
   vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
@@ -15,6 +15,25 @@ afterEach(() => vi.unstubAllGlobals());
 function mount(save = vi.fn(input => ({ ...initial, ...input })), onClose?: () => void) {
   return { save, view: renderSlot({ component: () => <BreatheSettings onClose={onClose} /> }, {}, { settings: initial, rpc: { saveSettings: save } }) };
 }
+it('previews all five named colors; Undo restores Lavender and Apply patches only the color', async () => {
+  const close = vi.fn();
+  const { view, save } = mount(undefined, close);
+  expect(view.getAllByRole('radio')).toHaveLength(5);
+  for (const name of ['Lavender', 'Ocean', 'Sage', 'Rose', 'Amber']) {
+    fireEvent.click(view.getByRole('radio', { name }));
+    expect(view.getByTestId('wave-preview').dataset.palette).toBe(name.toLowerCase());
+    expect((view.getByRole('radio', { name }) as HTMLInputElement).checked).toBe(true);
+  }
+  expect(save).not.toHaveBeenCalled();
+  fireEvent.click(view.getByRole('button', { name: 'Undo' }));
+  expect(view.getByTestId('wave-preview').dataset.palette).toBe('lavender');
+  fireEvent.click(view.getByRole('radio', { name: 'Sage' }));
+  fireEvent.click(view.getByRole('button', { name: 'Apply' }));
+  await view.findByText('Saved', { selector: 'p[role="status"]' });
+  expect(save).toHaveBeenCalledWith({ palette: 'sage' });
+  expect(close).toHaveBeenCalledOnce();
+  expect(view.getByTestId('wave-preview').dataset.palette).toBe('sage');
+});
 it('uses one settings surface in the native composer popup and plugin settings', async () => {
   const app = await loadPluginApp(() => import('./app'));
   expect(app.composerCustomizations[0]?.scopes).toEqual(['thread']);

@@ -1,17 +1,21 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { experimental_useCodeTheme } from "@get-bb/plugin-sdk/app";
 import { breathAt, drawWave, stardustAt, type Phase, type Timing } from "../lib/breath";
-export function BreatheWave({ timing }: { timing: Timing }) {
+import { waveColors, type PaletteId } from '../lib/palettes';
+export function BreatheWave({ timing, palette = 'lavender' }: { timing: Timing; palette?: PaletteId }) {
   const { mode } = experimental_useCodeTheme();
   const modeRef = useRef(mode);
+  const paletteRef = useRef(palette);
+  const ink = waveColors(palette, mode);
   const repaint = useRef<() => void>(() => {});
   const rippleAt = useRef<(x: number, y: number) => void>(() => {});
   const canvas = useRef<HTMLCanvasElement>(null);
   const [phase, setPhase] = useState<Phase>("breathe in");
   useEffect(() => {
     modeRef.current = mode;
+    paletteRef.current = palette;
     repaint.current();
-  }, [mode]);
+  }, [mode, palette]);
   useEffect(() => {
     const el = canvas.current;
     if (!el) return;
@@ -27,7 +31,7 @@ export function BreatheWave({ timing }: { timing: Timing }) {
       ripples = ripples.filter(ripple => elapsed - ripple.born < duration);
       drawWave(el, reduced.matches ? .5 : frame.amount, ripples.map(ripple => ({
         x: ripple.x, y: ripple.y, progress: (elapsed - ripple.born) / duration, still: reduced.matches,
-      })), stardustAt(elapsed, timing, reduced.matches), modeRef.current);
+      })), stardustAt(elapsed, timing, reduced.matches), modeRef.current, paletteRef.current);
       setPhase(old => old === frame.phase ? old : frame.phase);
     };
     const tick = () => {
@@ -53,7 +57,7 @@ export function BreatheWave({ timing }: { timing: Timing }) {
       if (!visible()) ripples = [];
       if (visible() && !disposed) { paint(); timer = setTimeout(tick, 100); }
     };
-    // Theme changes repaint in place, preserving the clock and active ripples.
+    // Color and theme changes preserve the clock and active ripples.
     repaint.current = () => { if (visible() && !disposed) paint(); };
     const observer = new IntersectionObserver(([entry]) => {
       intersecting = entry?.isIntersecting ?? false;
@@ -75,7 +79,7 @@ export function BreatheWave({ timing }: { timing: Timing }) {
     };
   }, [timing.inhale, timing.hold, timing.exhale]);
   return <>
-    <button type="button" className="breathe-wave-button" aria-label="Send a ripple through the wave"
+    <button type="button" className="breathe-wave-button" aria-label="Send a ripple through the wave" style={{ '--breathe-wave-focus': ink.text } as CSSProperties}
       onClick={event => {
         event.stopPropagation();
         const rect = event.currentTarget.getBoundingClientRect();
@@ -85,6 +89,6 @@ export function BreatheWave({ timing }: { timing: Timing }) {
       }}>
       <canvas ref={canvas} className="breathe-wave" width={140} height={53} aria-hidden="true" />
     </button>
-    <span className="breathe-phase" data-mode={mode}>{phase}</span>
+    <span className="breathe-phase" data-mode={mode} style={{ color: ink.text }}>{phase}</span>
   </>;
 }

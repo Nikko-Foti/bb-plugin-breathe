@@ -1,7 +1,8 @@
 import { readTiming, type Timing } from './breath';
+import { readPalette, type PaletteId } from './palettes';
 
-export type BreatheSettings = Timing & { enabled: boolean };
-export type SettingsDraft = Partial<{ enabled: boolean; inhale: string; hold: string; exhale: string }>;
+export type BreatheSettings = Timing & { enabled: boolean; palette: PaletteId };
+export type SettingsDraft = Partial<{ enabled: boolean; palette: PaletteId; inhale: string; hold: string; exhale: string }>;
 export const TIMING_FIELDS = [
   { key: 'inhale', label: 'Breathe in', min: 1 },
   { key: 'hold', label: 'Hold', min: 0 },
@@ -13,11 +14,11 @@ export const RHYTHMS = [
   { name: 'Unwind', timing: { inhale: 4, hold: 0, exhale: 6 } },
 ] as const;
 export function readBreatheSettings(values?: Record<string, unknown>): BreatheSettings {
-  return { enabled: values?.enabled !== false, ...readTiming(values) };
+  return { enabled: values?.enabled !== false, palette: readPalette(values?.palette), ...readTiming(values) };
 }
 export function resolveDraft(saved: BreatheSettings, draft: SettingsDraft) {
   const errors: Partial<Record<keyof Timing, string>> = {};
-  const next = { ...saved, enabled: draft.enabled ?? saved.enabled };
+  const next = { ...saved, enabled: draft.enabled ?? saved.enabled, palette: draft.palette ?? saved.palette };
   for (const { key, min } of TIMING_FIELDS) {
     const raw = draft[key] ?? String(saved[key]);
     const value = Number(raw);
@@ -25,7 +26,7 @@ export function resolveDraft(saved: BreatheSettings, draft: SettingsDraft) {
     else next[key] = value;
   }
   const patch: Partial<BreatheSettings> = {};
-  for (const key of ['enabled', 'inhale', 'hold', 'exhale'] as const) {
+  for (const key of ['enabled', 'palette', 'inhale', 'hold', 'exhale'] as const) {
     if (next[key] !== saved[key]) Object.assign(patch, { [key]: next[key] });
   }
   return { next, patch, errors, valid: Object.keys(errors).length === 0, dirty: Object.keys(patch).length > 0 || Object.keys(errors).length > 0 };

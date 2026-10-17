@@ -6,7 +6,7 @@ import { BreatheWave } from "./components/breathe-wave";
 import { SceneGlyph } from './components/scene-glyph';
 import { BreatheSettings } from './components/breathe-settings';
 import { shouldShowScene } from "./lib/visibility";
-import { readTiming } from "./lib/breath";
+import { readBreatheSettings } from "./lib/settings";
 import "./style.css";
 
 export function BreatheBanner() {
@@ -23,11 +23,12 @@ export function BreatheBanner() {
     thread, connection, status === "ready" && !isLoading, values?.enabled !== false,
   );
   if (!show || dismissed) return null;
+  const settings = readBreatheSettings(values);
   return <div className="breathe-banner" role="region" aria-label="Breathe animation">
     <button type="button" className="breathe-scene-menu" aria-label="Breathe settings" onClick={() => composer.experimental_openPopup("settings")}>
       <SceneGlyph /><span>Breathe</span><Icon name="ChevronDown" />
     </button>
-    <BreatheWave timing={readTiming(values)} />
+    <BreatheWave timing={settings} palette={settings.palette} />
     <div className="breathe-actions">
       <Button type="button" variant="ghost" size="icon" className="breathe-control text-muted-foreground"
         aria-label="Hide Breathe for this turn" onClick={() => setDismissed(true)}><Icon name="X" /></Button>

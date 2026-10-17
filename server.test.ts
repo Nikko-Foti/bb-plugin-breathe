@@ -1,13 +1,26 @@
 import { expect, it } from 'vitest';
 import { createFakePluginHost } from '@get-bb/plugin-sdk/testing';
 import plugin from './server';
+import { PALETTE_IDS } from './lib/palettes';
+it('persists each palette across reload without changing the breathing rhythm', async () => {
+  const { bb, harness } = createFakePluginHost({ pluginId: 'breathe', settings: { enabled: false, inhale: 6, hold: 0, exhale: 9 } });
+  plugin(bb);
+  try {
+    for (const palette of PALETTE_IDS) {
+      expect(await harness.behavior.callRpc('saveSettings', { palette })).toEqual({ enabled: false, inhale: 6, hold: 0, exhale: 9, palette });
+    }
+    const reloaded = await harness.lifecycle.reload(plugin);
+    try { expect(await reloaded.harness.behavior.callRpc('saveSettings', {})).toEqual({ enabled: false, inhale: 6, hold: 0, exhale: 9, palette: 'amber' }); }
+    finally { await reloaded.harness.lifecycle.dispose(); }
+  } finally { await harness.lifecycle.dispose(); }
+});
 it('saves a validated settings patch atomically and preserves every untouched setting', async () => {
   const { bb, harness } = createFakePluginHost({ pluginId: 'breathe', settings: { inhale: 6, hold: 0, exhale: 9 } });
   plugin(bb);
   try {
-    const expected = { enabled: false, inhale: 6, hold: 0, exhale: 9 };
+    const expected = { palette: 'lavender', enabled: false, inhale: 6, hold: 0, exhale: 9 };
     expect(await harness.behavior.callRpc('saveSettings', { enabled: false })).toEqual(expected);
-    for (const invalid of [{ inhale: 0, enabled: true }, { hold: -1 }, { exhale: 31 }, { inhale: 1.5 }, { animation: 'unknown' }, { enabled: 'yes' }, { extra: true }]) {
+    for (const invalid of [{ inhale: 0, enabled: true }, { hold: -1 }, { exhale: 31 }, { inhale: 1.5 }, { animation: 'unknown' }, { enabled: 'yes' }, { extra: true }, { palette: 'neon' }, { palette: 42 }]) {
       await expect(harness.behavior.callRpc('saveSettings', invalid)).rejects.toThrow();
       expect(await harness.behavior.callRpc('saveSettings', {})).toEqual(expected);
     }

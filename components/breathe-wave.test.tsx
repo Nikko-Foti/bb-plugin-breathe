@@ -53,6 +53,26 @@ it('repeated ripples preserve the breathing clock and share one disposable timer
   expect(vi.getTimerCount()).toBe(0);
 });
 
+it('recolors immediately without restarting the breath, including after an offscreen change', () => {
+  const paint = vi.spyOn(breath, 'drawWave');
+  const view = render(<BreatheWave timing={DEFAULT_TIMING} />);
+  act(() => vi.advanceTimersByTime(5000));
+  fireEvent.click(view.getByRole('button'));
+  const before = paint.mock.calls.at(-1)!;
+  view.rerender(<BreatheWave timing={DEFAULT_TIMING} palette="ocean" />);
+  expect(paint.mock.calls.at(-1)?.slice(0, 5)).toEqual(before.slice(0, 5));
+  expect(paint.mock.calls.at(-1)?.[5]).toBe('ocean');
+  expect(view.getByText('hold')).toBeTruthy();
+  expect(vi.getTimerCount()).toBe(1);
+  act(() => onIntersection([{ isIntersecting: false }]));
+  paint.mockClear();
+  view.rerender(<BreatheWave timing={DEFAULT_TIMING} palette="rose" />);
+  expect(paint).not.toHaveBeenCalled();
+  act(() => onIntersection([{ isIntersecting: true }]));
+  expect(paint.mock.calls.at(-1)?.[5]).toBe('rose');
+  expect(view.getByText('hold')).toBeTruthy();
+});
+
 it('repaints the theme without resetting the breath or active ripples', () => {
   const paint = vi.spyOn(breath, 'drawWave');
   const view = render(<BreatheWave timing={DEFAULT_TIMING} />);

@@ -1,6 +1,6 @@
 ## Timing and appearance
 
-Choose Classic (4/7/8), Even (4/4/4), Unwind (4/0/6), or custom durations. Inhale/exhale accept 1–30 whole seconds; hold accepts 0–30, with zero skipping hold. Send ripples with a pointer or keyboard. Light mode uses an amethyst crest; dark mode uses moonlit lavender.
+Choose Classic (4/7/8), Even (4/4/4), Unwind (4/0/6), or custom durations. Inhale/exhale accept 1–30 whole seconds; hold accepts 0–30, with zero skipping hold. Send ripples with a pointer or keyboard. Choose Lavender, Ocean, Sage, Rose, or Amber. BB adapts each palette to light and dark appearance; Lavender is the default.
 
 [Watch Breathe in motion (GIF)](https://raw.githubusercontent.com/Nikko-Foti/bb-plugin-breathe/main/assets/breathe-demo.gif).
 

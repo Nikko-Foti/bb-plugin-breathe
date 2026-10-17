@@ -1,4 +1,4 @@
-import { advance, createScene, frame, phaseOf, settingsOf } from '../lib/scenes.js';
+import { advance, createScene, frame, phaseOf, settingsOf, paletteOptions } from '../lib/scenes.js';
 
 const PANE = 'breathe-settings';
 let settings = settingsOf();
@@ -80,7 +80,7 @@ async function openSettings($) {
   if (saving) return;
   await loadSettings($);
   draft = { ...settings }; baseline = { ...settings }; preview = createScene(); previewOpen = true;
-  await $.ui.open({ id: PANE, title: 'Breathe', focus: true, closeOnEscape: true, rows: 28, columns: 54 });
+  await $.ui.open({ id: PANE, title: 'Breathe', focus: true, closeOnEscape: true, rows: 32, columns: 54 });
   syncClock($);
   $.ui.invalidate('ui.render');
 }
@@ -148,7 +148,7 @@ export function register(on) {
   on('session.start', async ($, e, next) => {
     await loadSettings($);
     await restorePane($);
-    await $.command.register({ name: 'breathe', description: 'Adjust your breathing rhythm' });
+    await $.command.register({ name: 'breathe', description: 'Choose your wave color and breathing rhythm' });
     return next(e);
   }).catch(($, e, next) => next(e));
   on('classic.SessionStart', async ($, e, next) => {
@@ -218,6 +218,10 @@ export function register(on) {
       Text({ bold: true, children: ['Breathe'] }),
       drawing($, e, preview, config, Math.max(6, Math.min(16, Math.floor((e.props.bodyColumns ?? 52) / 4)))),
       Button({ key: 'replay', label: 'Replay', plain: true, onPress: () => { if (!saving) { preview = createScene(); $.ui.invalidate('ui.render'); } } }),
+      Text({ children: ['Color'] }),
+      ...[paletteOptions.slice(0, 3), paletteOptions.slice(3)].map(options => Box({ flexDirection: 'row', columnGap: 1, children:
+        options.map(option => Button({ key: `palette-${option.id}`, label: `${draft.palette === option.id ? '✓ ' : ''}${option.name}`, onPress: () => edit($, { palette: option.id }) })),
+      })),
       Box({ flexDirection: 'row', columnGap: 1, children: [
         Button({ key: 'enabled', label: draft.enabled ? 'On' : 'Off', onPress: () => edit($, { enabled: !draft.enabled }) }),
         Button({ key: 'motion', label: draft.still ? 'Still' : 'Animated', onPress: () => edit($, { still: !draft.still }) }),

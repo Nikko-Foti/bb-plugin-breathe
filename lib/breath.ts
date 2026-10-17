@@ -1,3 +1,4 @@
+import { waveColors, type PaletteId, type WaveColors } from './palettes';
 export type Timing = { inhale: number; hold: number; exhale: number };
 export type Phase = "breathe in" | "hold" | "breathe out";
 export const DEFAULT_TIMING: Timing = { inhale: 4, hold: 7, exhale: 8 };
@@ -34,7 +35,7 @@ export function stardustAt(elapsedMs: number, timing: Timing, still = false): St
 }
 /** Half CSS resolution produces crisp square pixels. */
 export type Ripple = { x: number; y: number; progress: number; still?: boolean };
-export function drawWave(canvas: HTMLCanvasElement, amount: number, ripples: readonly Ripple[] = [], stardust?: Stardust, mode: 'light' | 'dark' = 'dark') {
+export function drawWave(canvas: HTMLCanvasElement, amount: number, ripples: readonly Ripple[] = [], stardust?: Stardust, mode: 'light' | 'dark' = 'dark', palette: PaletteId = 'lavender') {
   const w = Math.max(1, Math.round(canvas.clientWidth / 2));
   const h = Math.max(1, Math.round(canvas.clientHeight / 2));
   if (canvas.width !== w) canvas.width = w;
@@ -45,8 +46,8 @@ export function drawWave(canvas: HTMLCanvasElement, amount: number, ripples: rea
   ctx.imageSmoothingEnabled = false;
   const light = mode === 'light';
   // On paper, put the deepest ink at the crest and let the baseline recede.
-  const colors = light ? ["#B6A1CC", "#A481C6", "#8352B3", "#633592"]
-    : ["#292538", "#4d446e", "#9281bf", "#d2c6ed"];
+  const ink = waveColors(palette, mode);
+  const colors = ink.bands;
   // Extra transparent canvas above the button gives sparks room without moving the wave or composer.
   const headroom = 14, waveHeight = Math.max(1, h - headroom);
   const cx = Math.floor(w / 2), base = headroom + Math.floor(waveHeight * .78);
@@ -64,9 +65,9 @@ export function drawWave(canvas: HTMLCanvasElement, amount: number, ripples: rea
     ctx.scale(w * .37, height * .9 + 5);
     const halo = ctx.createRadialGradient(0, 0, .05, 0, 0, 1);
     const alpha = glow * (.06 + pulse * .09);
-    halo.addColorStop(0, `rgba(162,128,235,${alpha})`);
-    halo.addColorStop(.43, `rgba(162,128,235,${alpha * .56})`);
-    halo.addColorStop(1, "rgba(162,128,235,0)");
+    halo.addColorStop(0, `rgba(${ink.halo},${alpha})`);
+    halo.addColorStop(.43, `rgba(${ink.halo},${alpha * .56})`);
+    halo.addColorStop(1, `rgba(${ink.halo},0)`);
     ctx.fillStyle = halo;
     ctx.fillRect(-1, -1, 2, 2);
     ctx.restore();
@@ -80,32 +81,32 @@ export function drawWave(canvas: HTMLCanvasElement, amount: number, ripples: rea
         const twinkle = Math.sin((x - left) / 3 * 8.79 + y * 2.27 + seconds * 1.65);
         ctx.globalAlpha = (light ? 0 : glow * (.07 + .18 * pulse))
           + sparkles * Math.max(0, twinkle) ** 18 * (light ? .23 : .53) * Math.min(1, ratio + .2);
-        pixel(x, y, "#f1e5ff");
+        pixel(x, y, ink.shimmer);
         ctx.globalAlpha = 1;
       }
     }
   }
   // A single shared baseline remains when the wave and dot settle completely.
   for (let x = left; x < right; x += 3) pixel(x, base, colors[0]!);
-  pixel(cx - 1, base - height - 5 * amount, light ? "#633592" : "#eee7ff");
+  pixel(cx - 1, base - height - 5 * amount, ink.dot);
   if (sparkles > 0) {
     ctx.save();
-    ctx.shadowColor = light ? "#B486D2" : "#d9b8ff";
+    ctx.shadowColor = ink.shadow;
     ctx.shadowBlur = 3;
     for (let i = 0; i < 5; i++) {
       const life = (seconds * .2 + i * .213) % 1;
       const x = cx + Math.sin(i * 2.45) * w * .13 + Math.sin(life * 2.9 + i) * 2;
       const birth = base - Math.exp(-(((x - cx) / spread) ** 2)) * height - 4;
       ctx.globalAlpha = Math.sin(Math.PI * life) ** 2 * sparkles * .75;
-      pixel(x, Math.max(1, birth - life * 14), light ? "#8352B3" : "#f1e5ff", i % 2 ? 1 : 1.5, i % 2 ? 1 : 1.5);
+      pixel(x, Math.max(1, birth - life * 14), ink.spark, i % 2 ? 1 : 1.5, i % 2 ? 1 : 1.5);
     }
     ctx.restore();
   }
-  drawRipples(ctx, w, waveHeight, ripples, headroom);
+  drawRipples(ctx, w, waveHeight, ripples, headroom, ink);
 }
 
 /** Soft concentric rings sampled on the same pixel grid as the breathing wave. */
-function drawRipples(ctx: CanvasRenderingContext2D, w: number, h: number, ripples: readonly Ripple[], offsetY: number) {
+function drawRipples(ctx: CanvasRenderingContext2D, w: number, h: number, ripples: readonly Ripple[], offsetY: number, ink: WaveColors) {
   for (const ripple of ripples) {
     const p = ripple.progress;
     const radius = ripple.still ? 12 : 2 + (1 - (1 - p) ** 2) * 83;
@@ -126,7 +127,7 @@ function drawRipples(ctx: CanvasRenderingContext2D, w: number, h: number, ripple
         const alpha = Math.min(.85, (light + halo) * fade) * edge;
         if (alpha < .015) continue;
         ctx.globalAlpha = alpha;
-        ctx.fillStyle = light > .65 ? '#eee7ff' : '#b4a0e2';
+        ctx.fillStyle = ink.ripple[light > .65 ? 0 : 1];
         ctx.fillRect(x, y + offsetY, 2, 2);
       }
     }

@@ -1,9 +1,25 @@
 import { expect, it } from 'vitest';
 import { createScene, advance, frame, phaseOf, settingsOf } from './scenes';
 import { PixelCanvas, raster } from './pixel-canvas';
+import { PALETTE_IDS } from '../lib/palettes';
+it('renders five distinct SVG and terminal palettes while preserving phase and Still mode', () => {
+  const scene = createScene(); scene.elapsed = 5000;
+  const animated = PALETTE_IDS.map(palette => frame(scene, settingsOf({ palette })));
+  expect(new Set(animated.map(output => output.svg)).size).toBe(5);
+  expect(new Set(animated.map(output => output.raster.cells)).size).toBe(5);
+  for (const palette of PALETTE_IDS) {
+    const config = settingsOf({ palette, still: true });
+    const before = frame(scene, config);
+    advance(scene, 200, config);
+    expect(frame(scene, config)).toEqual(before);
+    expect(before.svg.length).toBeLessThan(75000);
+  }
+  expect(scene.elapsed).toBe(5000);
+  expect(settingsOf({ palette: 'invalid' }).palette).toBe('lavender');
+});
 it('normalizes settings, omits scene selection, and freezes Still frames', () => {
   const config = settingsOf({ enabled: 'no', animation: 'volcano', inhale: 0, hold: 0, exhale: Infinity, still: true });
-  expect(config).toEqual({ enabled: true, inhale: 4, hold: 0, exhale: 8, still: true });
+  expect(config).toEqual({ palette: 'lavender', enabled: true, inhale: 4, hold: 0, exhale: 8, still: true });
   const scene = createScene(), before = frame(scene, config);
   advance(scene, 1000, config); expect(frame(scene, config)).toEqual(before);
   expect(scene.elapsed).toBe(0); expect(phaseOf(scene, config)).toBe('Still');
