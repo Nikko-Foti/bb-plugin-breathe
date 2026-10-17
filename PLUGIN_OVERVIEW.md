@@ -4,6 +4,10 @@ A lavender pixel wave follows inhale, hold and exhale while the agent works. Cla
 
 The scene sits above the composer during active work and hides for completion or pending input. Open its settings to preview changes, replay, undo or apply. Hide dismisses the current turn. Motion pauses when hidden; reduced motion is supported.
 
+## Inspiration
+
+Inspired by [Mindful Claude](https://github.com/halluton/Mindful-Claude) by [halluton](https://github.com/halluton), which turns the wait for Claude into a guided breathing exercise.
+
 ## Requirements
 
 BB 0.46 or later with Plugin SDK 0.6.49 or later. A separate self-contained Claude Code package is included for hosts with JavaScript mod support. No external service or additional account is required. Each host keeps its own settings.

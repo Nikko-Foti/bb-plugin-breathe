@@ -8,7 +8,7 @@
   },
   "bb": {
     "name": "Breathe",
-    "description": "A pixel breathing wave with adjustable timing while your agent works.",
+    "description": "A pixel breathing wave with adjustable timing while your agent works. Inspired by Mindful Claude by halluton.",
     "branding": {
       "icon": "./assets/icon.svg"
     },
@@ -56,7 +56,7 @@
   "private": true,
   "license": "MIT",
   "author": "Nikko Foti",
-  "description": "A pixel breathing wave with adjustable timing while your agent works.",
+  "description": "A pixel breathing wave with adjustable timing while your agent works. Inspired by Mindful Claude by halluton.",
   "scripts": {
     "build": "npm run build:bb && npm run build:claude",
     "typecheck": "tsc --noEmit",

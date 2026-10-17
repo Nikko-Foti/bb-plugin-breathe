@@ -4,14 +4,18 @@ A lavender pixel wave follows inhale, hold and exhale while the agent works. Cla
 
 A standalone plugin for **BB** and **Claude Code**. Its package, settings, styles and commands are independent of the other scene.
 
+Inspired by [Mindful Claude](https://github.com/halluton/Mindful-Claude) by [halluton](https://github.com/halluton), which turns the wait for Claude into a guided breathing exercise.
+
+## A reminder to breathe
+
+Slow, regular [breathing exercises](https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/breathing-exercises-for-stress/) can help ease stress and anxiety. Breathe brings the reminder back whenever your agent works, turning everyday waiting time into a cue to pause, breathe, and practise regularly.
+
 ## BB
 
-Requires BB 0.46 or later with Plugin SDK 0.6.49 or later. From this checkout:
+Requires BB 0.46 or later with Plugin SDK 0.6.49 or later.
 
 ```sh
-npm ci
-npm run build:bb
-bb plugin install .
+bb plugin install git:https://github.com/Nikko-Foti/bb-plugin-breathe.git@main
 ```
 
 Open **Breathe settings** from the composer label, the **+** menu, or plugin settings. Preview, Replay, Undo and Apply are available. The scene appears during active work, pauses offscreen, respects system reduced motion, and hides while waiting for input. Hide dismisses the current turn. Enabling both standalone plugins displays both; each has its own switch.
@@ -42,4 +46,4 @@ npm run validate:claude
 npm run test:claude
 ```
 
-Derived from the local While We Wait release at `b3553fb`, retaining its renderer and lifecycle fixes. MIT licensed. No external service, project-file access, shell execution or model calls are used by either runtime integration. Nothing in this checkout implies a published marketplace listing.
+MIT licensed. Runs locally without external services, model calls, or access to your project files.
