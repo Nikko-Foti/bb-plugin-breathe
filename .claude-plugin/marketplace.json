@@ -1,0 +1,14 @@
+{
+  "name": "breathe",
+  "description": "A pixel breathing wave with adjustable timing while your agent works.",
+  "owner": {
+    "name": "Nikko Foti"
+  },
+  "plugins": [
+    {
+      "name": "breathe",
+      "source": "./claude",
+      "description": "A pixel breathing wave with adjustable timing while your agent works."
+    }
+  ]
+}

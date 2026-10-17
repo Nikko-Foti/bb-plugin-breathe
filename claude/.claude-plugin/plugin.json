@@ -1,0 +1,17 @@
+{
+  "name": "breathe",
+  "displayName": "Breathe",
+  "version": "0.1.0",
+  "description": "A pixel breathing wave with adjustable timing while your agent works.",
+  "author": {
+    "name": "Nikko Foti",
+    "url": "https://github.com/Nikko-Foti"
+  },
+  "license": "MIT",
+  "keywords": [
+    "animation",
+    "breathe",
+    "pixel-art",
+    "mods"
+  ]
+}

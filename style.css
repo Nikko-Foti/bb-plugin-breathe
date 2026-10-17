@@ -1,0 +1,98 @@
+.breathe-banner {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; min-height: 116px; padding: 2px 0 16px; width: 100%;
+}
+.breathe-wave-button { position: relative; display: block; width: min(280px, 85%); height: 78px; padding: 0; border: 0; background: transparent; cursor: pointer; border-radius: 10px; -webkit-tap-highlight-color: transparent; }
+.breathe-wave-button:focus-visible { outline: 1px solid #9281bf; outline-offset: 4px; }
+.breathe-wave { position: absolute; bottom: 0; left: 0; display: block; width: 100%; height: 106px; image-rendering: pixelated; pointer-events: none; }
+.breathe-phase { height: 16px; line-height: 16px; font-size: 11px; font-weight: 400; letter-spacing: .25px; color: color-mix(in srgb, #aaa0be 85%, var(--foreground)); }
+.breathe-phase[data-mode="light"] { color: #83728f; }
+.breathe-actions { position: absolute; right: 8px; top: 6px; display: flex; gap: 2px; opacity: 0; pointer-events: none; transition: opacity 150ms ease; }
+.breathe-banner:hover .breathe-actions, .breathe-banner:focus-within .breathe-actions { opacity: 1; pointer-events: auto; }
+.breathe-control { width: 26px; height: 26px; }
+.breathe-control [data-icon-root] { width: 13px; height: 13px; }
+/* The menu uses the host palette, with one lavender Breathe accent. */
+.breathe-studio {
+  --breathe-accent: color-mix(in srgb, #9281bf 68%, var(--foreground));
+  --breathe-tint: color-mix(in srgb, var(--breathe-accent) 9%, var(--background));
+  --breathe-line: color-mix(in srgb, var(--foreground) 11%, transparent);
+  --breathe-quiet: color-mix(in srgb, var(--foreground) 64%, var(--background));
+  width: 392px; max-width: 100%; min-width: 0; max-height: min(740px, 78dvh);
+  display: flex; flex-direction: column; overflow: hidden; isolation: isolate;
+  color: var(--foreground); background: var(--background); border-radius: 16px;
+  font-size: 12px; line-height: 1.5; text-align: left;
+}
+.breathe-studio *, .breathe-studio *::before, .breathe-studio *::after { box-sizing: border-box; }
+.breathe-studio button, .breathe-studio input { font: inherit; }
+.breathe-studio button { cursor: pointer; }
+.breathe-studio button:disabled, .breathe-studio input:disabled { cursor: default; opacity: .45; }
+.breathe-studio button:focus-visible, .breathe-studio input:focus-visible, .breathe-scene-menu:focus-visible { outline: 2px solid var(--breathe-accent, #9281bf); outline-offset: 3px; }
+.breathe-studio-header { display: flex; align-items: center; gap: 11px; padding: 16px 20px 14px; flex-shrink: 0; }
+.breathe-brand-mark { width: 36px; height: 36px; display: grid; place-items: center; background: var(--breathe-tint); color: var(--breathe-accent); border: 1px solid color-mix(in srgb, var(--breathe-accent) 18%, transparent); border-radius: 11px; }
+.breathe-studio-title { flex: 1; min-width: 0; }
+.breathe-studio-title h2 { margin: 0; font-size: 18px; font-weight: 600; line-height: 1.3; letter-spacing: -.5px; }
+.breathe-close { align-self: center; width: 28px; height: 28px; color: var(--breathe-quiet); margin: 0 -5px 0 0; }
+.breathe-studio-body { padding: 0 20px 18px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; min-height: 0; }
+.breathe-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.breathe-scene-glyph { width: 25px; height: 22px; flex-shrink: 0; color: var(--breathe-accent, currentColor); }
+.breathe-preview-card { margin-top: 0; border: 1px solid var(--breathe-line); border-radius: 12px; overflow: hidden; background: radial-gradient(ellipse at 50% 55%, var(--breathe-tint), transparent 75%); }
+.breathe-preview-toolbar { height: 32px; padding: 4px 9px 0 12px; display: flex; align-items: center; justify-content: flex-end; }
+.breathe-replay { height: 25px; padding: 0 5px; gap: 4px; font-size: 10px !important; color: var(--breathe-quiet); }
+.breathe-replay [data-icon-root] { width: 11px; height: 11px; }
+.breathe-studio-stage { height: 108px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+/* Keep the scene and its card clear of the toolbar. */
+.breathe-studio-stage .breathe-wave-button { width: min(280px, 92%); }
+.breathe-section-heading { display: flex; justify-content: space-between; align-items: baseline; margin: 14px 0 8px; }
+.breathe-section-heading h3 { font-size: 12px; font-weight: 550; margin: 0; }
+.breathe-section-heading > span { color: var(--breathe-quiet); font-size: 10px; font-variant-numeric: tabular-nums; }
+.breathe-presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; padding: 4px; border: 1px solid var(--breathe-line); border-radius: 10px; }
+.breathe-preset { flex-direction: column; gap: 1px; height: auto; padding: 6px 2px; border-radius: 7px; line-height: 1.35; font-size: 11px !important; color: var(--breathe-quiet); border: 1px solid transparent; }
+.breathe-preset small { font-size: 10px; font-weight: 400; opacity: .8; font-variant-numeric: tabular-nums; }
+.breathe-studio .breathe-preset[aria-pressed="true"] { background: var(--breathe-tint); color: var(--foreground); border-color: color-mix(in srgb, var(--breathe-accent) 32%, transparent); }
+.breathe-cycle { display: flex; gap: 3px; height: 4px; margin: 12px 0 8px; }
+.breathe-cycle span { border-radius: 3px; min-width: 4px; background: var(--breathe-accent); }
+.breathe-cycle [data-phase="hold"] { opacity: .35; }
+.breathe-cycle [data-phase="exhale"] { opacity: .65; }
+.breathe-timing-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.breathe-timing-field > label { display: block; margin-bottom: 6px; font-size: 10px; color: var(--breathe-quiet); }
+.breathe-stepper { display: flex; height: 34px; align-items: center; border: 1px solid var(--breathe-line); border-radius: 8px; }
+.breathe-stepper button { flex: 0 0 25px; height: 100%; padding: 0; border: 0; border-radius: 7px; background: transparent; color: var(--breathe-quiet); }
+.breathe-stepper button:hover:not(:disabled) { background: var(--breathe-tint); color: var(--foreground); }
+.breathe-stepper input { min-width: 0; height: 100%; border: 0; border-radius: 4px; padding: 0; text-align: center; font-size: 12px; font-weight: 550; font-variant-numeric: tabular-nums; -moz-appearance: textfield; appearance: textfield; }
+.breathe-stepper input::-webkit-inner-spin-button, .breathe-stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.breathe-stepper:has([aria-invalid="true"]) { border-color: var(--destructive); }
+.breathe-field-error { color: var(--destructive); font-size: 10px; margin: 5px 0 0; line-height: 1.5; display: block; }
+.breathe-switch { appearance: none; -webkit-appearance: none; position: relative; flex-shrink: 0; width: 32px; height: 19px; border: 1px solid var(--breathe-line); border-radius: 20px; background: color-mix(in srgb, var(--foreground) 15%, var(--background)); cursor: pointer; transition: background 150ms; }
+.breathe-switch::after { content: ''; position: absolute; left: 3px; top: 3px; width: 11px; height: 11px; background: var(--background); border-radius: 50%; transition: transform 150ms; }
+.breathe-switch:checked { background: var(--breathe-accent); border-color: var(--breathe-accent); }
+.breathe-switch:checked::after { transform: translateX(13px); }
+.breathe-studio-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 20px; border-top: 1px solid var(--breathe-line); background: var(--background); flex-shrink: 0; }
+.breathe-save-state { min-width: 0; }
+.breathe-save-state p { font-size: 10px; color: var(--breathe-quiet); margin: 0; }
+.breathe-save-state .breathe-field-error { color: var(--destructive); }
+.breathe-text-action { font: inherit; font-size: 10px !important; border: 0; padding: 0; color: var(--breathe-accent); background: transparent; text-decoration: underline; text-underline-offset: 3px; margin-top: 3px; }
+.breathe-apply { flex-shrink: 0; border-radius: 8px; min-height: 32px; font-size: 11px !important; }
+.breathe-scene-menu { position: absolute; top: 4px; left: 8px; z-index: 1; display: flex; align-items: center; gap: 5px; min-height: 28px; padding: 3px 7px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: var(--muted-foreground, var(--foreground)); font: inherit; font-size: 10px; cursor: pointer; }
+.breathe-scene-menu .breathe-scene-glyph { width: 14px; height: 14px; }
+.breathe-scene-menu [data-icon-root] { width: 10px; height: 10px; }
+.breathe-scene-menu:hover { border-color: var(--border); background: var(--background); color: var(--foreground); }
+@media (max-width: 420px) {
+  .breathe-studio { width: 100%; max-height: 78dvh; border-radius: 12px; }
+  .breathe-studio-header { padding: 16px 14px 14px; }
+  .breathe-studio-body { padding: 0 14px 14px; }
+  .breathe-studio-footer { padding: 12px 14px; }
+  .breathe-stepper button { flex-basis: 24px; }
+}
+@media (pointer: coarse) {
+  .breathe-actions { opacity: 1; pointer-events: auto; }
+  .breathe-control, .breathe-scene-menu { min-height: 36px; }
+  .breathe-stepper, .breathe-apply { min-height: 40px; }
+  .breathe-replay, .breathe-close { min-height: 32px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .breathe-actions, .breathe-switch, .breathe-switch::after { transition: none; }
+}
+@media (forced-colors: active) {
+  .breathe-switch { appearance: auto; -webkit-appearance: auto; }
+  .breathe-switch::after { display: none; }
+}

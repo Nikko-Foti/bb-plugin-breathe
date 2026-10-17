@@ -1,21 +1,9 @@
-Keep a todo list beside the work it belongs to, in the sidebar and in
-your agent threads.
-
-## What you get
-
-- An **Example todos** page in the left sidebar that adds, completes, and
-  removes todos.
-- A `bb breathe` command that does the same from a terminal.
-- Live updates, so a change made in one place reaches every open page at once.
+A lavender pixel wave follows inhale, hold and exhale while the agent works. Classic (4/7/8), Even (4/4/4) and Unwind (4/0/6) presets and custom durations are available. Inhale/exhale accept 1–30 whole seconds; hold accepts 0–30, with zero skipping hold. BB supports pointer and keyboard ripples. Light mode uses an amethyst crest; dark mode uses moonlit lavender.
 
 ## How it works
 
-The todos live in this plugin's own storage on the BB server, one list per
-installation. Nothing leaves the machine, and the plugin needs no account, API
-key, or external service.
+The scene sits above the composer during active work and hides for completion or pending input. Open its settings to preview changes, replay, undo or apply. Hide dismisses the current turn. Motion pauses when hidden; reduced motion is supported.
 
-## For agents
+## Requirements
 
-The bundled skill tells an agent to read the list with `bb breathe list`, add
-one todo at a time with `bb breathe add`, and close finished work with
-`bb breathe done`.
+BB 0.46 or later with Plugin SDK 0.6.49 or later. A separate self-contained Claude Code package is included for hosts with JavaScript mod support. No external service or additional account is required. Each host keeps its own settings.

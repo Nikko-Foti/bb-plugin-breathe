@@ -1,0 +1,6 @@
+{
+  "description": "Breathe animation and settings",
+  "modules": [
+    "./register.js"
+  ]
+}
