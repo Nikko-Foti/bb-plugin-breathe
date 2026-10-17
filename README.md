@@ -1,5 +1,7 @@
 # Breathe
 
+![Breathe's lavender pixel wave guiding a breathing cycle](assets/breathe-demo.gif)
+
 A lavender pixel wave follows inhale, hold and exhale while the agent works. Classic (4/7/8), Even (4/4/4) and Unwind (4/0/6) presets and custom durations are available. Inhale/exhale accept 1–30 whole seconds; hold accepts 0–30, with zero skipping hold. BB supports pointer and keyboard ripples. Light mode uses an amethyst crest; dark mode uses moonlit lavender.
 
 A standalone plugin for **BB** and **Claude Code**. Its package, settings, styles and commands are independent of the other scene.
