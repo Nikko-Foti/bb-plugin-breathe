@@ -23,4 +23,4 @@ Installed BB bundle hash: `63b17523c241368d`.
 
 Live BB verification used the user's current dark appearance. Light appearance and narrow layouts were checked in the source preview. Contrast tests cover six representative surfaces, not arbitrary custom host themes. Native Claude plugin tests exercised both rendering surfaces and callbacks; a separate live Claude Desktop window was not visually verified for this change. The installed Claude plugin reads from the updated local `claude/` directory; already-running sessions need a restart.
 
-This is a local development update. No new tag, package, remote push, or marketplace release was created. The published v0.1.0 artifact still contains its original Lavender-only wave.
+These checks were completed before publication. The five palettes are included in the v0.1.1 release; the immutable v0.1.0 artifact retains its original Lavender-only wave.

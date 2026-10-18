@@ -17,7 +17,7 @@ Slow, regular [breathing exercises](https://www.nhs.uk/mental-health/self-help/g
 Requires BB 0.46 or later with Plugin SDK 0.6.49 or later.
 
 ```sh
-bb plugin install git:https://github.com/Nikko-Foti/bb-plugin-breathe.git@v0.1.0
+bb plugin install git:https://github.com/Nikko-Foti/bb-plugin-breathe.git@v0.1.1
 ```
 
 Open **Breathe settings** from the composer label, the **+** menu, or plugin settings. Preview, Replay, Undo and Apply are available. The scene appears during active work, pauses offscreen, respects system reduced motion, and hides while waiting for input. Hide dismisses the current turn. An on-demand Breathe skill helps agents explain or configure it.
@@ -36,7 +36,7 @@ Run **`/breathe`** for settings. Terminal draws colored half-block pixels; Deskt
 
 Open **Breathe settings → Color** in BB or **`/breathe` → Color** in Claude Code. Selection previews immediately; Apply saves it. Color changes preserve your timing. The [color research](docs/color-research.md) explains the evidence, design choices, and complete wave ramps.
 
-The five-color feature is currently in the development checkout. The published `v0.1.0` package above contains the original Lavender wave. To use this checkout in BB, run `npm ci && npm run build && bb plugin install .` from the repository; Claude's local installation uses the `claude/` directory.
+The five color choices are included in v0.1.1. To use a local checkout in BB, run `npm ci && npm run build && bb plugin install .` from the repository; Claude's local installation uses the `claude/` directory.
 
 ## Development
 
