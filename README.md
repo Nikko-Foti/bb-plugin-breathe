@@ -2,15 +2,13 @@
 
 ![Breathe's lavender pixel wave guiding a breathing cycle](assets/breathe-demo.gif)
 
-A pixel wave in Lavender, Ocean, Sage, Rose, or Amber follows inhale, hold and exhale while the agent works. Classic (4/7/8), Even (4/4/4) and Unwind (4/0/6) presets and custom durations are available. Inhale/exhale accept 1–30 whole seconds; hold accepts 0–30, with zero skipping hold. BB adds pointer and keyboard ripples. Every color has its own light and dark appearance; Lavender is the default.
+An animated pixel wave that guides your breathing while your agent works.
+
+Choose from five colors and breathing presets, or set your own rhythm. The wave disappears when your agent finishes or needs input.
 
 A standalone plugin for **BB** and **Claude Code**, with separate settings for each host.
 
-Inspired by [Mindful Claude](https://github.com/halluton/Mindful-Claude) by [halluton](https://github.com/halluton), which turns the wait for Claude into a guided breathing exercise.
-
-## A reminder to breathe
-
-Slow, regular [breathing exercises](https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/breathing-exercises-for-stress/) can help ease stress and anxiety. Breathe brings the reminder back whenever your agent works, turning everyday waiting time into a cue to pause, breathe, and practise regularly.
+Inspired by [Mindful Claude](https://github.com/halluton/Mindful-Claude) by [halluton](https://github.com/halluton).
 
 ## BB
 
